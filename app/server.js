@@ -37,22 +37,29 @@ fs.readFile("credentials/google.json", "utf8", function(err, data) {
   app.post("/sign-in/google", function(req, res) {
     let accessToken = req.body.accessToken;
 
-    async function verify() {
-      const ticket = await client.verifyIdToken({
+    var verify = new Promise(function(resolve, reject) {
+      const ticket = client.verifyIdToken({
         idToken: accessToken,
         audience: credentials.clientId // Specify the CLIENT_ID of the app that accesses the backend
         // Or, if multiple clients access the backend:
         //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
       });
-      const payload = ticket.getPayload();
-      //   const userid = payload["sub"];
-      debug(payload);
-      // Send user data back to the client
-      res.send(payload);
-      // If request specified a G Suite domain:
-      //const domain = payload['hd'];
-    }
-    verify().catch(console.error);
+
+      resolve(ticket);
+    })
+      .then(ticket => {
+        const payload = ticket.getPayload();
+        //   const userid = payload["sub"];
+        debug(payload);
+        // Send user data back to the client
+        res.send(payload);
+        // If request specified a G Suite domain:
+        //const domain = payload['hd'];
+      })
+      .catch(error => {
+        debug(error);
+        res.send(error.message);
+      });
   });
 
   app.get("/sign-in/firebase", function(req, res) {
