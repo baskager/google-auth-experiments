@@ -1,3 +1,5 @@
+app/credentials/*
+
 # Logs
 logs
 *.log

@@ -1,0 +1,31 @@
+{
+  "name": "google-auth-experiments",
+  "version": "1.0.0",
+  "description": "A few experiments with google authentication to find the best option",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "\u001chttps://github.com/baskager/google-auth-experiments"
+  },
+  "keywords": [
+    "google",
+    "auth",
+    "sign-in",
+    "firebase",
+    "auth-sdk",
+    "experiment"
+  ],
+  "author": "Bas Kager",
+  "license": "MPL-2.0",
+  "dependencies": {
+    "express": "^4.16.3",
+    "express-handlebars": "^3.0.0"
+  },
+  "devDependencies": {
+    "debug": "^3.1.0"
+  }
+}
