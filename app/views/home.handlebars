@@ -2,6 +2,25 @@
     <h1>Authentication experiments</h1>
 </header>
 <main>
+    <section class="userData">
+        <h2>User data</h2>
+        <p>
+            <img id="avatar" src="" />
+            <br>
+            <b>First name: </b>
+            <span id="firstName"></span>
+            <br>
+            <b>Last name: </b>
+            <span id="lastName"></span>
+            <br>
+            <b>Email: </b>
+            <span id="email"></span>
+            <br>
+            <b>Issuer: </b>
+            <span id="issuer"></span>
+            <br>
+        </p>
+    </section>
     <section>
         <h2>Google Sign-In</h2>
         <div class="g-signin2" data-onsuccess="onSignIn"></div>
@@ -11,17 +30,32 @@
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <script>
     function onSignIn(googleUser) {
-        var profile = googleUser.getBasicProfile();
-        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-        console.log('Name: ' + profile.getName());
-        console.log('Image URL: ' + profile.getImageUrl());
-        console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+        var id_token = googleUser.getAuthResponse().id_token;
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/sign-in/google');
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function () {
+            var userData = JSON.parse(xhr.responseText);
+            console.log(userData);
+
+            document.querySelector("#avatar").setAttribute("src", userData.picture);
+            document.querySelector("#firstName").textContent = userData.given_name;
+            document.querySelector("#lastName").textContent = userData.family_name;
+            if (userData.email_verified === true) document.querySelector("#email").textContent += "**Verified** ";
+            document.querySelector("#email").textContent += userData.email;
+            document.querySelector("#issuer").textContent = userData.iss;
+            document.querySelector(".userData").style.display = "block";
+        };
+        xhr.send('accessToken=' + id_token);
     }
     function signOut() {
         var auth2 = gapi.auth2.getAuthInstance();
         auth2.signOut().then(function () {
             console.log('User signed out.');
+            location.reload();
         });
     }
+
 
 </script>
