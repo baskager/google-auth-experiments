@@ -23,7 +23,8 @@ fs.readFile("credentials/google.json", "utf8", function(err, data) {
 
   app.get("/", function(req, res) {
     res.render("home", {
-      pageName: "home"
+      pageName: "home",
+      googleClientId: credentials.clientId
     });
   });
 
